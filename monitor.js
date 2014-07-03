@@ -1,53 +1,75 @@
 var request = require("request");
 
 var apacheStatusUrl = process.argv[2];
+var port = process.argv[3] || 8000;
 
 if(!apacheStatusUrl) {
-	return console.log("Usage: apachemonitor url");
+    return console.log("Usage: apachemonitor url [port]");
 }
+
+var app = require("express")();
+var http = require("http").Server(app);
+var io = require("socket.io")(http);
+
+app.get("/", function(req, res) {
+    res.sendfile("index.html");
+});
+
+http.listen(port, function() {
+    console.log("Listening on port " + port);
+});
+
+io.on("connection", function(socket) {
+    console.log("Connection");
+});
 
 apacheStatusUrl = apacheStatusUrl.split("?")[0] + "?q=auto";
 
-setInterval(readApacheStatus.bind(null, apacheStatusUrl), 1000);
+setInterval(readApacheStatus.bind(null, apacheStatusUrl, broadcast), 1000);
 
-function readApacheStatus(url) {
-	function convertToJson(body) {
-		var lines = body.split("\n");
+function broadcast(data) {
+    data.timestamp = new Date();
+    io.emit("status", data);
+};
 
-		var json = "{";
+function readApacheStatus(url, callback) {
+    function convertToJson(body) {
+        var lines = body.split("\n");
 
-		for(var i = 0; i < lines.length; i++) {
-			if(i === lines.length - 2) {
-				break;
-			}
+        var json = "{";
 
-			var tuple = lines[i].split(":");
+        for(var i = 0; i < lines.length; i++) {
+            if(i === lines.length - 2) {
+                break;
+            }
 
-			json += "\"" + tuple[0] + "\"";
+            var tuple = lines[i].split(":");
 
-			json += ":" + tuple[1];
+            json += "\"" + tuple[0] + "\"";
 
-			if(i !== lines.length - 3) {
-				json += ",";
-			}
-		}
+            json += ":" + tuple[1];
 
-		json += "}";
+            if(i !== lines.length - 3) {
+                json += ",";
+            }
+        }
 
-		return JSON.parse(json);
-	}
+        json += "}";
 
-	request(url, function(err, response, body) {
-		if(err) {
-			return console.error("Failed to request apache status: ", err);
-		}
+        return JSON.parse(json);
+    }
 
-		if(response.statusCode !== 200) {
-			return console.error("Failed to request apache status: ", response);
-		}
+    request(url, function(err, response, body) {
+        if(err) {
+            return console.error("Failed to request apache status: ", err);
+        }
 
-		var data = convertToJson(body);
+        if(response.statusCode !== 200) {
+            return console.error("Failed to request apache status: ", response);
+        }
 
-		console.log(data.CPULoad);
-	});
+        var data = convertToJson(body);
+
+        callback(data);
+    });
 }
