@@ -1,0 +1,22 @@
+{
+  "name": "apache-monitor",
+  "version": "0.0.0",
+  "description": "apache-monitor ==============",
+  "main": "monitor.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wnr/apache-monitor.git"
+  },
+  "author": "Lucas Wiener <lucas@wiener.se>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wnr/apache-monitor/issues"
+  },
+  "homepage": "https://github.com/wnr/apache-monitor",
+  "dependencies": {
+    "request": "^2.36.0"
+  }
+}
