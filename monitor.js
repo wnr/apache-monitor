@@ -23,10 +23,6 @@ http.listen(port, function() {
     console.log("Listening on port " + port);
 });
 
-io.on("connection", function(socket) {
-    console.log("Connection");
-});
-
 apacheStatusUrl = apacheStatusUrl.split("?")[0] + "?q=auto";
 
 setInterval(readApacheStatus.bind(null, apacheStatusUrl, broadcast), 1000);
@@ -67,6 +63,12 @@ function readApacheStatus(url, callback) {
         var output = {};
 
         output.cpu = object.CPULoad;
+        output.concurrent = object.ReqPerSec;
+
+        output.workers = {
+            idle: object.IdleWorkers,
+            busy: object.BusyWorkers
+        }
 
         return output;
     }
