@@ -63,6 +63,14 @@ function readApacheStatus(url, callback) {
         return JSON.parse(json);
     }
 
+    function map(object) {
+        var output = {};
+
+        output.cpu = object.CPULoad;
+
+        return output;
+    }
+
     request(url, function(err, response, body) {
         if(err) {
             return console.error("Failed to request apache status: ", err);
@@ -74,6 +82,6 @@ function readApacheStatus(url, callback) {
 
         var data = convertToJson(body);
 
-        callback(data);
+        callback(map(data));
     });
 }

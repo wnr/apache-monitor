@@ -8,7 +8,7 @@
             }
 
             #container {
-                height: 99%;
+                height: 100%;
                 width: 100%;
             }
         </style>
@@ -24,29 +24,24 @@
 
         <script>
             var socket = io();
+            var charts;
 
             socket.on("status", function(data) {
+                charts.cpu.addData([data.cpu], time(new Date()));
+                var num = charts.cpu.datasets[0].points.length;
+
+                if(num > 20) {
+                    charts.cpu.removeData();
+                }
+
                 console.log(data);
             });
 
-            var width = $("canvas").parent().width();
-            var height = $("canvas").parent().height();
-            $("canvas").attr("width", width);
-            $("canvas").attr("height", height);
-            setupCharts();
-            window.onresize = function(event){
-                var width = $("canvas").parent().width();
-                var height = $("canvas").parent().height();
-                $("canvas").attr("width", width);
-                $("canvas").attr("height", height);
+            charts = setupCharts();
 
-                setupCharts();
-            };
-
-            setupCharts();
 
             function setupCharts() {
-
+                var objects = {};
 
                 var data = {
                     labels: ["02:13:31", "02:13:32"],
@@ -64,6 +59,15 @@
 
                 var context = document.getElementById("cpu").getContext("2d");
                 var cpuChart = new Chart(context).Line(data, options);
+                cpuChart.addData([3.1], "123132");
+
+                objects.cpu = cpuChart;
+
+                return objects;
+            }
+
+            function time(date) {
+                return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
             }
 
         </script>
