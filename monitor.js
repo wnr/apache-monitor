@@ -15,6 +15,10 @@ app.get("/", function(req, res) {
     res.sendfile("index.html");
 });
 
+app.get("/bower_components/chartjs/Chart.min.js", function(req, res) {
+    res.sendfile("bower_components/chartjs/Chart.min.js");
+});
+
 http.listen(port, function() {
     console.log("Listening on port " + port);
 });

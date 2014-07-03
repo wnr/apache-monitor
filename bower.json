@@ -1,0 +1,19 @@
+{
+  "name": "apache-monitor",
+  "version": "0.0.0",
+  "homepage": "https://github.com/wnr/apache-monitor",
+  "authors": [
+    "Lucas Wiener <lucas@wiener.se>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "chartjs": "~0.2.0"
+  }
+}
