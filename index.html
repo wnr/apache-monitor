@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>Socket.IO chat</title>
+        <title>Apache monitor</title>
         <style>
             body, html {
                 height: 100%;
@@ -79,10 +79,11 @@
                     datasetStrokeWidth : 5,
                     scaleGridLineWidth : 2,
                     animation: false,
-                    bezierCurve: false,
+                    bezierCurve: true,
                     pointDot : false,
                     datasetFill : false,
-                    responsive: true
+                    responsive: true,
+                    scaleGridLineColor: "rgba(0, 0, 0, .3)",
                 };
 
                 var context = document.getElementById("cpu").getContext("2d");
