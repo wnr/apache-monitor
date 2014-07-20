@@ -30,7 +30,7 @@ setInterval(readApacheStatus.bind(null, apacheStatusUrl, broadcast), 1000);
 function broadcast(data) {
     data.timestamp = new Date();
     io.emit("status", data);
-};
+}
 
 function readApacheStatus(url, callback) {
     function convertToJson(body) {
@@ -47,7 +47,7 @@ function readApacheStatus(url, callback) {
 
             json += "\"" + tuple[0] + "\"";
 
-            json += ":" + tuple[1];
+            json += ": \"" + tuple[1] + "\"";
 
             if(i !== lines.length - 3) {
                 json += ",";
@@ -62,13 +62,13 @@ function readApacheStatus(url, callback) {
     function map(object) {
         var output = {};
 
-        output.cpu = object.CPULoad;
-        output.concurrent = object.ReqPerSec;
+        output.cpu = object.CPULoad | 0;
+        output.concurrent = object.ReqPerSec | 0;
 
         output.workers = {
-            idle: object.IdleWorkers,
-            busy: object.BusyWorkers
-        }
+            idle: object.IdleWorkers | 0,
+            busy: object.BusyWorkers | 0
+        };
 
         return output;
     }
